@@ -1,0 +1,55 @@
+---
+- hosts: my_db_server
+  name: Install MongoDB 4.2
+  become: yes
+  tasks:
+  - name: add repo MongoDB 4.2
+    copy:
+      dest: "/etc/yum.repos.d/mongodb-org-4.2.repo"
+      content: |
+        [mongodb-org-4.2]
+        name=MongoDB Repository
+        baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+        gpgcheck=1
+        enabled=1
+        gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+
+
+  - name: install MongoDB 4.2
+    yum:
+      name: mongodb-org
+      state: present
+      update_cache: true
+
+
+
+  - name: start and enabled MongoDB
+    systemd:
+       name: mongod
+       state: started 
+       enabled: yes 
+
+
+
+  - name: create key dir 
+    file:
+       path: /var/lib/mongo/keys
+       state: directory 
+       owner: mongod
+       group: mongod
+
+
+
+  - name: copy configure files mongodb
+    copy:
+       src: /home/my_user/ansible/mongodb/mongod.conf
+       dest: /etc/mongod.conf
+       owner: root
+       group: root
+       mode: '0644'
+    copy:
+       src: /home/my_user/ansible/mongodb/mongokey
+       dest: /var/lib/mongo/keys/mongokey
+       owner: mongod
+       group: mongod
+       mode: '0400'
