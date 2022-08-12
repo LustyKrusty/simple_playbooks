@@ -1,0 +1,9 @@
+# add user to group 
+- hosts: my_servers
+  tasks:
+    - name: Add MY_USER to wheel
+      become: true
+      user: 
+        name: MY_USER 
+        groups: wheel
+        append: yes 
