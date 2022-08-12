@@ -1,0 +1,20 @@
+# copy authorized_keys
+---
+
+- hosts: test
+  tasks:
+    - name: create .ssh
+      file:
+        path: /home/MY_USER/.ssh
+        state: directory
+        owner: MY_USER
+        group: MY_USER
+        mode: '0700'
+
+    - name: copy authorized_keys
+      copy:
+        src: /home/MY_USER/.ssh/authorized_keys
+        dest: /home/MY_USER/.ssh/authorized_keys
+        owner: MY_USER
+        group: MY_USER
+        mode: '0600'
