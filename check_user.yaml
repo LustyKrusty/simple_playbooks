@@ -1,0 +1,16 @@
+---
+- hosts: MY_HOSTS
+  gather_facts: yes
+  vars:
+    dis_user:
+    - user
+    - user2
+  tasks:
+  - name: Get all account info
+    getent:
+      database: passwd
+  - debug:
+      msg: "{{ item }}"
+    when: item in ansible_facts.getent_passwd
+    with_items:
+    - "{{ dis_user | lower }}"
